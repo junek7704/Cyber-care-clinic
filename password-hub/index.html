@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Safety Hub</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 50px auto;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    progress {
+      width: 100%;
+      height: 20px;
+    }
+    ul {
+      text-align: left;
+      margin-top: 15px;
+    }
+    .good { color: green; }
+    .bad { color: red; }
+    #generated-password {
+      font-weight: bold;
+      margin-top: 10px;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <h2>🔐 Password Safety Hub</h2>
+  <input type="password" id="password" placeholder="Enter your password" />
+  <p id="strength-label"></p>
+  <progress id="strength-bar" value="0" max="4"></progress>
+
+  <h3>💡 Improvement Tips</h3>
+  <ul id="tips-list"></ul>
+
+  <h3>📋 Password Health Report</h3>
+  <ul id="health-report"></ul>
+
+  <h3>⚡ Password Generator</h3>
+  <button onclick="generatePassword()">Generate Strong Password</button>
+  <p id="generated-password"></p>
+
+  <h3>🛡️ Breach Prevention Advice</h3>
+  <ul>
+    <li>Use a unique password for each account.</li>
+    <li>Enable two-factor authentication (2FA) wherever possible.</li>
+    <li>Change passwords immediately if you suspect a breach.</li>
+    <li>Avoid using personal information (birthdays, names, etc.).</li>
+    <li>Regularly check if your email/password has been exposed in a breach.</li>
+  </ul>
+
+  <script src="https://cdn.jsdelivr.net/npm/zxcvbn/dist/zxcvbn.js"></script>
+  <script>
+    const passwordInput = document.getElementById("password");
+    const strengthLabel = document.getElementById("strength-label");
+    const strengthBar = document.getElementById("strength-bar");
+    const tipsList = document.getElementById("tips-list");
+    const healthReport = document.getElementById("health-report");
+    const generatedPassword = document.getElementById("generated-password");
+
+    passwordInput.addEventListener("input", checkPassword);
+
+    function checkPassword() {
+      const pwd = passwordInput.value;
+      tipsList.innerHTML = "";
+      healthReport.innerHTML = "";
+
+      if (pwd) {
+        const result = zxcvbn(pwd);
+        const score = result.score;
+
+        // Strength label
+        const labels = ["Very Weak", "Weak", "Fair", "Strong", "Very Strong"];
+        strengthLabel.textContent = "Strength: " + labels[score];
+        strengthBar.value = score;
+
+        // Tips
+        const feedback = result.feedback.suggestions;
+        if (feedback.length > 0) {
+          feedback.forEach(tip => {
+            const li = document.createElement("li");
+            li.textContent = tip;
+            tipsList.appendChild(li);
+          });
+        } else {
+          const li = document.createElement("li");
+          li.textContent = "Great job! Your password is strong.";
+          tipsList.appendChild(li);
+        }
+
+        // Health Report
+        const checks = [
+          { test: pwd.length >= 8, text: "At least 8 characters long" },
+          { test: /[A-Z]/.test(pwd), text: "Contains uppercase letter" },
+          { test: /[a-z]/.test(pwd), text: "Contains lowercase letter" },
+          { test: /[0-9]/.test(pwd), text: "Contains a number" },
+          { test: /[^A-Za-z0-9]/.test(pwd), text: "Contains a special symbol" },
+        ];
+
+        checks.forEach(check => {
+          const li = document.createElement("li");
+          li.textContent = check.text;
+          li.className = check.test ? "good" : "bad";
+          healthReport.appendChild(li);
+        });
+      } else {
+        strengthLabel.textContent = "";
+        strengthBar.value = 0;
+      }
+    }
+
+    // ✅ Password Generator
+    function generatePassword() {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+      let pwd = "";
+      for (let i = 0; i < 16; i++) {
+        pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      generatedPassword.textContent = pwd;
+      passwordInput.value = pwd; // auto-fill input
+      checkPassword(); // evaluate it immediately
+    }
+  </script>
+</body>
+</html>
