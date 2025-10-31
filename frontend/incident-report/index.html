@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberCare Clinic - Report Incident</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .form-container {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2d89ef;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input, textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      background: #2d89ef;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #1c5fb8;
+    }
+
+    .back-btn {
+      background: #666;
+      margin-top: 10px;
+    }
+
+    .back-btn:hover {
+      background: #444;
+    }
+
+    .success-message {
+      text-align: center;
+      color: #28a745;
+      font-weight: bold;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>🛡️ Report an Incident</h2>
+    <form id="incidentForm">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" name="name" placeholder="Enter your name" required />
+
+      <label for="email">Your Email</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required />
+
+      <label for="incident-type">Type of Incident</label>
+      <select id="incident-type" name="type_of_incident" required>
+        <option value="">-- Select Incident Type --</option>
+        <option value="phishing">Phishing</option>
+        <option value="malware">Malware</option>
+        <option value="hacking">Hacking / Account Breach</option>
+        <option value="data-leak">Data Leak</option>
+        <option value="other">Other</option>
+      </select>
+
+      <label for="description">Incident Description</label>
+      <textarea id="description" name="incident_description" placeholder="Describe what happened..." required></textarea>
+
+      <label for="date">Date of Incident</label>
+      <input type="date" id="date" name="date_of_incident" required />
+
+      <button type="submit">Submit Report</button>
+    </form>
+
+    <div class="success-message" id="successMessage">
+      ✅ Incident successfully reported!
+    </div>
+
+    <!-- Back to Home Button -->
+    <button class="back-btn" onclick="location.href='../index.html'">⬅️ Back to Home</button>
+  </div>
+
+  <script>
+    document.getElementById("incidentForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const formData = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        type_of_incident: document.getElementById("incident-type").value,
+        incident_description: document.getElementById("description").value,
+        date_of_incident: document.getElementById("date").value,
+      };
+
+      try {
+        const response = await fetch("http://localhost:5000/incident-report", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+
+        const result = await response.json();
+        if (result.message) {
+          document.getElementById("successMessage").style.display = "block";
+          document.getElementById("incidentForm").reset();
+        } else {
+          alert("Something went wrong!");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error submitting report!");
+      }
+    });
+  </script>
+</body>
+</html>

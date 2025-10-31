@@ -1,0 +1,71 @@
+:root {
+  /* 🎨 Color Palette */
+  --primary-color: #007bff;
+  --primary-hover: #0056b3;
+  --accent-color: #17a2b8;
+  --text-color: #222;
+  --muted-text: #666;
+  --background-color: #f4f6f8;
+  --card-bg: #fff;
+  --border-color: #ddd;
+
+  /* 💎 Layout + Effects */
+  --border-radius: 10px;
+  --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  --transition: 0.3s ease;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+}
+
+/* 🌟 Universal Card Design */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* ✨ Universal Button */
+button,
+.btn {
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+button:hover,
+.btn:hover {
+  background: var(--primary-hover);
+}
+
+/* 📱 Simple layout utility classes */
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: var(--muted-text);
+}

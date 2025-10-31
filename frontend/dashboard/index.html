@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard - CyberCare Clinic</title>
+  <link rel="stylesheet" href="../css/theme.css">
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+
+    header {
+      background-color: #2d89ef;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 22px;
+      margin: 0;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: bold;
+      transition: opacity 0.3s;
+    }
+
+    nav a:hover {
+      opacity: 0.8;
+    }
+
+    .container {
+      padding: 40px;
+      text-align: center;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      padding: 25px;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      color: #2d89ef;
+    }
+
+    .logout-btn {
+      background: #69f8b0;
+      color: rgb(223, 12, 12);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #b52b38;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>CYBERCARE</h1>
+    <nav>
+      <a href="../support-resources/index.html">Resources</a>
+      <a href="../password-hub/index.html">Password Hub</a>
+      <a href="../incident-report/index.html">Report Incident</a>
+      <a href="../incident-guides.html">Incident Guides</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Hello, User 👋</h2>
+    <p>Access key tools and resources below:</p>
+
+    <div class="cards">
+      <div class="card" onclick="location.href='../support-resources/index.html'">
+        <h3>📘 Support Resources</h3>
+        <p>Explore cybersecurity awareness resources and safety guides.</p>
+      </div>
+
+      <div class="card" onclick="location.href='../password-hub/index.html'">
+        <h3>🔐 Password Hub</h3>
+        <p>Learn about password safety and management best practices.</p>
+      </div>
+
+      <div class="card" onclick="location.href='../incident-report/index.html'">
+        <h3>🛡️ Report an Incident</h3>
+        <p>Report any security threats or incidents quickly and securely.</p>
+      </div>
+
+      <div class="card" onclick="location.href='../incident-guides/index.html'">
+        <h3>📖 Incident Guides</h3>
+        <p>View detailed recovery and prevention steps for various threats.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function logout() {
+      alert("You have been logged out.");
+      location.href = "../user-login.html";
+    }
+  </script>
+
+</body>
+</html>

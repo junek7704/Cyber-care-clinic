@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | CyberCare Clinic</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #ffffff, #f8f8f8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      width: 350px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+
+    .success {
+      color: green;
+      margin-top: 10px;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      text-align: center;
+      color: white;
+      width: 100%;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Admin Login</h2>
+
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button onclick="loginAdmin()">Login</button>
+
+    <div id="message"></div>
+  </div>
+
+  <footer>© 2025 CyberCare Clinic | Admin Access</footer>
+
+  <script>
+    async function loginAdmin() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const message = document.getElementById("message");
+
+      if (!username || !password) {
+        message.innerHTML = "<p class='error'>Please enter both username and password.</p>";
+        return;
+      }
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/admin-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+          credentials: "include"
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          message.innerHTML = "<p class='success'>Login successful! Redirecting...</p>";
+          setTimeout(() => {
+            window.location.href = "admin-dashboard.html";
+          }, 1000);
+        } else {
+          message.innerHTML = `<p class='error'>${data.error || "Invalid credentials."}</p>`;
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        message.innerHTML = "<p class='error'>Server error. Please try again later.</p>";
+      }
+    }
+  </script>
+</body>
+</html>

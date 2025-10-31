@@ -1,0 +1,202 @@
+/* General reset and fonts */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #f4f6f9;
+  color: #333;
+}
+
+/* Layout container */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background-color: #0b1e39; /* navy blue */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.sidebar .logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 40px;
+  text-align: center;
+  color: #fff;
+}
+
+.sidebar .nav {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar .nav a {
+  color: #bfc8d7;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 10px 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.sidebar .nav a:hover {
+  background-color: #142c54;
+  color: #fff;
+}
+
+.sidebar .nav a.active {
+  background-color: #1d3f73;
+  color: #fff;
+  font-weight: 500;
+}
+
+.sidebar .logout {
+  margin-top: auto;
+  color: #ffb3b3;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  padding: 30px 40px;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  color: #0b1e39;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+/* Resources grid */
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.resource-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 25px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.resource-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.resource-card .icon {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.resource-card h3 {
+  font-size: 1.2rem;
+  color: #0b1e39;
+  margin-bottom: 10px;
+}
+
+.resource-card p {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.resource-card button {
+  background-color: #1d3f73;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.resource-card button:hover {
+  background-color: #244b87;
+}
+/* === CATEGORY SECTION STYLES === */
+.category-section {
+  margin-bottom: 40px;
+}
+
+.category-title {
+  font-size: 1.5rem;
+  color: #2d89ef;
+  font-weight: 600;
+  margin-bottom: 20px;
+  border-left: 5px solid #2d89ef;
+  padding-left: 10px;
+}
+
+/* Grid for each category */
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.resource-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.resource-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.resource-card .icon {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.resource-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.resource-card p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.resource-card .btn {
+  display: inline-block;
+  background: #2d89ef;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.resource-card .btn:hover {
+  background: #1c5fb8;
+}

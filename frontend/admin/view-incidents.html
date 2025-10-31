@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberCare Clinic - View Incidents</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #2d89ef;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background: #2d89ef;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 15px;
+      background: #666;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .back-btn:hover {
+      background: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📋 Reported Incidents</h2>
+
+  <table id="incidentsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="5" style="text-align:center;">Loading incidents...</td></tr>
+    </tbody>
+  </table>
+
+  <a href="../index.html" class="back-btn">⬅ Back to Home</a>
+
+  <script>
+    async function loadIncidents() {
+      try {
+        const response = await fetch("http://localhost:5000/incidents");
+        const incidents = await response.json();
+
+        const tableBody = document.querySelector("#incidentsTable tbody");
+        tableBody.innerHTML = "";
+
+        if (incidents.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No incidents reported yet.</td></tr>`;
+          return;
+        }
+
+        incidents.forEach(inc => {
+          const row = `
+            <tr>
+              <td>${inc.name}</td>
+              <td>${inc.email}</td>
+              <td>${inc.type_of_incident}</td>
+              <td>${inc.incident_description}</td>
+              <td>${inc.date_of_incident}</td>
+            </tr>
+          `;
+          tableBody.innerHTML += row;
+        });
+      } catch (err) {
+        console.error("Error loading incidents:", err);
+      }
+    }
+
+    // Load incidents on page load
+    window.onload = loadIncidents;
+  </script>
+
+</body>
+</html>

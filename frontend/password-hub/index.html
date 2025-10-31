@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 400px;
+      max-width: 500px;
       margin: 50px auto;
       text-align: center;
     }
@@ -31,10 +31,46 @@
       margin-top: 10px;
       word-wrap: break-word;
     }
+    .copy-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      margin-top: 8px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .copy-btn:hover {
+      background: #0056b3;
+    }
+    /* FAQ styles */
+    .faq-container {
+      text-align: left;
+      margin-top: 30px;
+    }
+    .faq-item {
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .faq-question {
+      background: #f0f0f0;
+      padding: 10px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .faq-answer {
+      display: none;
+      padding: 10px;
+      background: #fff;
+    }
   </style>
 </head>
 <body>
   <h2>🔐 Password Safety Hub</h2>
+
+  <!-- Strength Checker -->
   <input type="password" id="password" placeholder="Enter your password" />
   <p id="strength-label"></p>
   <progress id="strength-bar" value="0" max="4"></progress>
@@ -45,10 +81,13 @@
   <h3>📋 Password Health Report</h3>
   <ul id="health-report"></ul>
 
+  <!-- Password Generator -->
   <h3>⚡ Password Generator</h3>
   <button onclick="generatePassword()">Generate Strong Password</button>
   <p id="generated-password"></p>
+  <button class="copy-btn" onclick="copyPassword()">📋 Copy to Clipboard</button>
 
+  <!-- Breach Prevention Advice -->
   <h3>🛡️ Breach Prevention Advice</h3>
   <ul>
     <li>Use a unique password for each account.</li>
@@ -57,6 +96,31 @@
     <li>Avoid using personal information (birthdays, names, etc.).</li>
     <li>Regularly check if your email/password has been exposed in a breach.</li>
   </ul>
+
+  <!-- Best Practices FAQ -->
+  <div class="faq-container">
+    <h3>📖 Password Best Practices</h3>
+
+    <div class="faq-item">
+      <div class="faq-question">🔄 How often should I change my passwords?</div>
+      <div class="faq-answer">Change important account passwords (like email, banking, and work accounts) every 3–6 months, or immediately if you suspect a breach.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">❓ Why is password reuse dangerous?</div>
+      <div class="faq-answer">If one reused password is leaked in a data breach, attackers can try the same password on your other accounts (this is called credential stuffing).</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">🔑 What makes a password truly strong?</div>
+      <div class="faq-answer">A strong password is long (12+ characters), contains a mix of upper/lowercase letters, numbers, and symbols, and avoids dictionary words or personal info.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">📱 Should I use a password manager?</div>
+      <div class="faq-answer">Yes! A password manager securely stores and generates unique passwords for each account so you don’t have to remember them all.</div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/zxcvbn/dist/zxcvbn.js"></script>
   <script>
@@ -78,12 +142,10 @@
         const result = zxcvbn(pwd);
         const score = result.score;
 
-        // Strength label
         const labels = ["Very Weak", "Weak", "Fair", "Strong", "Very Strong"];
         strengthLabel.textContent = "Strength: " + labels[score];
         strengthBar.value = score;
 
-        // Tips
         const feedback = result.feedback.suggestions;
         if (feedback.length > 0) {
           feedback.forEach(tip => {
@@ -97,7 +159,6 @@
           tipsList.appendChild(li);
         }
 
-        // Health Report
         const checks = [
           { test: pwd.length >= 8, text: "At least 8 characters long" },
           { test: /[A-Z]/.test(pwd), text: "Contains uppercase letter" },
@@ -118,7 +179,6 @@
       }
     }
 
-    // ✅ Password Generator
     function generatePassword() {
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?";
       let pwd = "";
@@ -126,9 +186,28 @@
         pwd += chars.charAt(Math.floor(Math.random() * chars.length));
       }
       generatedPassword.textContent = pwd;
-      passwordInput.value = pwd; // auto-fill input
-      checkPassword(); // evaluate it immediately
+      passwordInput.value = pwd;
+      checkPassword();
     }
+
+    function copyPassword() {
+      const pwd = generatedPassword.textContent;
+      if (pwd) {
+        navigator.clipboard.writeText(pwd).then(() => {
+          alert("Password copied to clipboard!");
+        });
+      } else {
+        alert("No password to copy!");
+      }
+    }
+
+    // FAQ toggle
+    document.querySelectorAll(".faq-question").forEach(item => {
+      item.addEventListener("click", () => {
+        const answer = item.nextElementSibling;
+        answer.style.display = (answer.style.display === "block") ? "none" : "block";
+      });
+    });
   </script>
 </body>
 </html>

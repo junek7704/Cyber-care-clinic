@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberCare Clinic | Support Resources</title>
+
+  <!-- Link to CSS file -->
+  <link rel="stylesheet" href="../css/support-resources.css" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="dashboard-container">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2 class="logo">CyberCare</h2>
+      <nav class="nav">
+        <a href="../dashboard/index.html">🏠 Dashboard</a>
+        <a href="../profile/index.html">👤 My Profile</a>
+        <a href="index.html" class="active">💙 Support Resources</a>
+        <a href="../settings/index.html">⚙️ Settings</a>
+        <a href="../logout.html" class="logout">🚪 Logout</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header>
+        <h1>Support Resources</h1>
+        <p>Find help, guidance, and learning materials to support your mental and digital wellbeing.</p>
+      </header>
+
+      <!-- Dynamic Resource Section -->
+      <section id="resources-container" class="resources-section">
+        <p class="loading-text">Loading resources...</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Fetch all resources from backend
+    fetch("http://localhost:5000/api/resources")
+      .then(response => response.json())
+      .then(resources => {
+        const container = document.getElementById("resources-container");
+        container.innerHTML = ""; // Clear loading text
+
+        if (!resources || resources.length === 0) {
+          container.innerHTML = "<p>No resources available at the moment. Please check back later.</p>";
+          return;
+        }
+
+        // Group resources by category
+        const categories = {};
+        resources.forEach(resource => {
+          const category = resource.category || "Uncategorized";
+          if (!categories[category]) categories[category] = [];
+          categories[category].push(resource);
+        });
+
+        // Display resources grouped by category
+        Object.keys(categories).forEach(category => {
+          const categorySection = document.createElement("div");
+          categorySection.classList.add("category-section");
+
+          categorySection.innerHTML = `<h2 class="category-title">${category}</h2>`;
+
+          const grid = document.createElement("div");
+          grid.classList.add("resources-grid");
+
+          categories[category].forEach(resource => {
+            const card = document.createElement("div");
+            card.classList.add("resource-card");
+
+            card.innerHTML = `
+              <div class="icon">${resource.icon || "📘"}</div>
+              <h3>${resource.title}</h3>
+              <p>${resource.description}</p>
+              ${
+                resource.link
+                  ? `<a href="${resource.link}" target="_blank" class="btn">Read More</a>`
+                  : ""
+              }
+            `;
+
+            grid.appendChild(card);
+          });
+
+          categorySection.appendChild(grid);
+          container.appendChild(categorySection);
+        });
+      })
+      .catch(err => {
+        console.error("Error fetching resources:", err);
+        const container = document.getElementById("resources-container");
+        container.innerHTML = '<p class="error-text">Error loading resources. Please try again later.</p>';
+      });
+  </script>
+</body>
+</html>
