@@ -56,51 +56,52 @@
     <p class="error" id="errorMsg"></p>
     <p>Don't have an account? <a href="user-register.html">Register</a></p>
   </div>
+<script>
+async function loginUser() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const errorMsg = document.getElementById("errorMsg");
+  errorMsg.textContent = "";
 
-  <script>
-    async function loginUser() {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const errorMsg = document.getElementById("errorMsg");
-      errorMsg.textContent = "";
+  if (!email || !password) {
+    errorMsg.textContent = "Please enter both email and password.";
+    return;
+  }
 
-      if (!email || !password) {
-        errorMsg.textContent = "Please enter both email and password.";
-        return;
-      }
+  try {
+    const response = await fetch("http://127.0.0.1:5000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+      credentials: "include"
+    });
 
-      try {
-        const response = await fetch("http://127.0.0.1:5000/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-          credentials: "include"
-        });
+    const result = await response.json();
+    console.log("Login response:", result); // Check backend response
 
-        const result = await response.json();
-        console.log("Login response:", result); // Debug backend response
-
-        if (!response.ok) {
-          errorMsg.textContent = result.error || "Login failed.";
-          return;
-        }
-
-        localStorage.setItem("userName", result.name);
-        localStorage.setItem("role", result.role);
-
-        // ✅ Safe redirect
-        if (result.redirect) {
-          window.location.href = result.redirect;
-        } else {
-          alert("Redirect URL missing!");
-          console.error("Redirect missing in login response:", result);
-        }
-
-      } catch (err) {
-        console.error("Login error:", err);
-        errorMsg.textContent = "Something went wrong. Try again later.";
-      }
+    if (!response.ok) {
+      errorMsg.textContent = result.error || "Login failed.";
+      return;
     }
-  </script>
+
+    // Save info locally
+    localStorage.setItem("userName", result.name);
+    localStorage.setItem("role", result.role);
+
+    // Only redirect if redirect URL exists
+    if (result.redirect) {
+      window.location.href = result.redirect;
+    } else {
+      alert("Redirect URL missing!");
+      console.error("Redirect missing in login response:", result);
+    }
+
+  } catch (err) {
+    console.error("Login error:", err);
+    errorMsg.textContent = "Something went wrong. Try again later.";
+  }
+}
+</script>
+
 </body>
 </html>

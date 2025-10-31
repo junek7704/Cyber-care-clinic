@@ -13,28 +13,64 @@
       background-color: #f4f6f8;
       font-family: 'Segoe UI', sans-serif;
     }
+
     h2 {
       color: #003366;
       font-weight: 600;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
+
+    .subtitle {
+      color: #555;
+      font-size: 15px;
+    }
+
     .table-container {
       background: white;
       border-radius: 10px;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
       padding: 25px;
+      margin-bottom: 40px;
     }
+
     .table thead {
       background-color: #003366;
       color: white;
     }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
     .btn-contact {
       background-color: #007bff;
       border: none;
       color: white;
+      transition: background 0.3s;
     }
+
     .btn-contact:hover {
       background-color: #0056b3;
+    }
+
+    .btn-emergency {
+      background-color: #dc3545;
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .btn-emergency:hover {
+      background-color: #a71d2a;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
     }
   </style>
 </head>
@@ -43,8 +79,8 @@
 
   <!-- ✅ Page Header -->
   <div class="container text-center my-5">
-    <h2>🛡️ Incident Response Guides</h2>
-    <p class="text-muted">Browse and access detailed guides to handle various cybersecurity incidents.</p>
+    <h2>Incident Response Guides</h2>
+    <p class="subtitle">Find the right steps to take when facing different cybersecurity incidents.</p>
   </div>
 
   <!-- ✅ Guides Table -->
@@ -54,15 +90,26 @@
         <thead>
           <tr>
             <th>Incident Type</th>
-            <th>Response Guide</th>
+            <th>Response Steps</th>
             <th>Contact Support</th>
           </tr>
         </thead>
         <tbody id="guides-body">
-          <!-- Dynamic content loads here -->
+          <tr>
+            <td colspan="3" class="text-center text-muted">Loading incident guides...</td>
+          </tr>
         </tbody>
       </table>
     </div>
+  </div>
+
+  <!-- ✅ Emergency Contact -->
+  <div class="footer">
+    <a href="mailto:emergency@cybercare.com?subject=Urgent%20Cyber%20Incident%20Help" class="btn-emergency">
+       Emergency Contact
+    </a>
+    <br><br>
+    <a href="../dashboard/index.html" class="btn btn-outline-secondary mt-3">⬅ Back to Dashboard</a>
   </div>
 
   <!-- ✅ Bootstrap JS -->
@@ -77,27 +124,35 @@
         const tbody = document.getElementById("guides-body");
         tbody.innerHTML = "";
 
+        if (!guides.length) {
+          tbody.innerHTML = "<tr><td colspan='3' class='text-center text-muted'>No guides available at the moment.</td></tr>";
+          return;
+        }
+
         guides.forEach(guide => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${guide.incident_type || "N/A"}</td>
-            <td>${Array.isArray(guide.steps)
-              ? guide.steps.map(step => `<li>${step}</li>`).join("")
-              : guide.steps || "No steps provided"}
-            </td>
-            <td>
-              <a href="mailto:support@cybercare.com?subject=Help with ${guide.incident_type}" 
-                 class="btn btn-contact btn-sm">Contact</a>
-            </td>
-          `;
-          tbody.appendChild(row);
+          const stepsHTML = Array.isArray(guide.steps)
+            ? `<ul>${guide.steps.map(step => `<li>${step}</li>`).join("")}</ul>`
+            : `<p>${guide.steps || "No steps provided."}</p>`;
+
+          const row = `
+            <tr>
+              <td><strong>${guide.incident_type || "N/A"}</strong></td>
+              <td>${stepsHTML}</td>
+              <td>
+                <a href="mailto:support@cybercare.com?subject=Help%20with%20${encodeURIComponent(guide.incident_type || 'Incident')}" 
+                   class="btn btn-contact btn-sm">Contact Support</a>
+              </td>
+            </tr>`;
+          tbody.insertAdjacentHTML("beforeend", row);
         });
       } catch (err) {
         console.error("Error loading guides:", err);
+        document.getElementById("guides-body").innerHTML =
+          "<tr><td colspan='3' class='text-center text-danger'>Failed to load guides. Please try again later.</td></tr>";
       }
     }
 
-    // Load on page start
+    // Load guides on page load
     fetchGuides();
   </script>
 </body>

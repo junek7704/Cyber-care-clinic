@@ -78,16 +78,18 @@
     }
 
     /* ✅ Main content */
-    .main-content {
-      flex-grow: 1;
-      margin-left: 250px;
-      padding: 50px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      transition: margin-left 0.3s ease;
-      width: calc(100% - 250px);
+   .main-content {
+  flex-grow: 1;
+  margin-left: 250px;
+  padding: 50px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* ✅ Vertically center content */
+  align-items: center;      /* ✅ Horizontally center content */
+  text-align: center;
+  transition: margin-left 0.3s ease;
+  width: calc(100% - 250px);
+  min-height: 100vh;        /* ✅ Take full height */
     }
 
     .dashboard-grid {
@@ -184,9 +186,33 @@
 
   <!-- ✅ Main Content -->
   <main class="main-content">
-    <h2 class="fw-semibold mb-2">Welcome, Admin 👋</h2>
-    <p class="text-muted mb-4">Manage all system resources and guides from here.</p>
+    <!-- ✅ Dashboard Header -->
+    <div class="d-flex justify-content-center text-danger w-100 mb-4">
+      <div>
+        <h2 class="fw-semibold mb-1">Welcome, Admin</h2>
+        <p class="text-muted mb-0">Manage all system resources and guides from here.</p>
+      </div>
 
+      <!-- 🔔 Notification Bell -->
+      <div class="position-relative me-3">
+        <button id="notif-btn" class="btn btn-light position-relative">
+          🔔
+          <span id="notif-count" class="badge bg-danger position-absolute top-0 start-100 translate-middle" style="font-size: 0.7rem;">0</span>
+        </button>
+
+        <!-- Notification Dropdown -->
+        <div id="notif-dropdown" class="card shadow position-absolute end-0 mt-2" style="width: 280px; display: none; z-index: 2000;">
+          <div class="card-header bg-primary text-white py-2">
+            <strong>Recent Notifications</strong>
+          </div>
+          <ul id="notif-list" class="list-group list-group-flush" style="max-height: 250px; overflow-y: auto;">
+            <li class="list-group-item text-muted small text-center">No new notifications</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ Dashboard Cards -->
     <div class="dashboard-grid">
       <div class="card text-center">
         <h3 class="text-primary mb-3">📚 Add Support Resource</h3>
@@ -215,7 +241,55 @@
   <!-- ✅ Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
+  <!-- ✅ Notifications Script -->
   <script>
+    const notifBtn = document.getElementById("notif-btn");
+    const notifDropdown = document.getElementById("notif-dropdown");
+
+    notifBtn.addEventListener("click", () => {
+      notifDropdown.style.display = notifDropdown.style.display === "none" ? "block" : "none";
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!notifBtn.contains(e.target) && !notifDropdown.contains(e.target)) {
+        notifDropdown.style.display = "none";
+      }
+    });
+
+    async function loadNotifications() {
+      try {
+        const res = await fetch("http://127.0.0.1:5000/notifications");
+        const data = await res.json();
+        const notifList = document.getElementById("notif-list");
+        const notifCount = document.getElementById("notif-count");
+
+        notifList.innerHTML = "";
+        notifCount.textContent = data.filter(n => !n.is_read).length;
+
+        if (data.length === 0) {
+          notifList.innerHTML = '<li class="list-group-item text-muted small text-center">No new notifications</li>';
+          return;
+        }
+
+        data.forEach(n => {
+          const item = document.createElement("li");
+          item.className = "list-group-item small";
+          item.innerHTML = `
+            <strong>${n.title || "System Alert"}</strong><br>
+            <span>${n.message || ""}</span>
+            <br><small class="text-muted">${n.timestamp}</small>
+          `;
+          notifList.appendChild(item);
+        });
+      } catch (err) {
+        console.error("Error loading notifications:", err);
+      }
+    }
+
+    // Load notifications every 10 seconds
+    setInterval(loadNotifications, 10000);
+    loadNotifications();
+
     function logout() {
       alert("Logging out...");
       window.location.href = "admin-login.html";
